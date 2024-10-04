@@ -3,9 +3,9 @@ import Graph from "react-graph-vis";
 import React, { useState } from "react";
 
 const DEFAULT_PARAMS = {
-  "temperature": 0.3,
   "max_tokens": 4096,
-  "top_p": 1,
+  "temperature": 0.7,
+  "top_p": 0.95,
   "frequency_penalty": 0,
   "presence_penalty": 0
 }
@@ -121,8 +121,27 @@ function App() {
       .then(text => text.replace("$prompt", prompt))
       .then(prompt => {
         console.log(prompt)
-
-        const params = { ...DEFAULT_PARAMS, prompt: prompt, stop: "\n" };
+        const messages = [
+          {
+            "role": "system",
+            "content": [
+              {
+                "type": "text",
+                "text": "You are an AI assistant that helps people create graph."
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": prompt
+              }
+            ]
+          },
+        ]
+        const params = { ...DEFAULT_PARAMS, messages: messages };
 
         const requestOptions = {
           method: 'POST',
@@ -148,20 +167,20 @@ function App() {
           })
           .then((response) => {
             const { choices } = response;
-            const text = choices[0].text;
+            const text = choices[0].message.content;
             console.log(text);
 
             const updates = JSON.parse(text);
             console.log(updates);
 
             updateGraph(updates);
-
-            document.getElementsByClassName("searchBar")[0].value = "";
-            document.body.style.cursor = 'default';
-            document.getElementsByClassName("generateButton")[0].disabled = false;
           }).catch((error) => {
             console.log(error);
             alert(error);
+          }).finally(() => {
+            document.getElementsByClassName("searchBar")[0].value = "";
+            document.body.style.cursor = 'default';
+            document.getElementsByClassName("generateButton")[0].disabled = false;
           });
       })
   };
@@ -174,7 +193,27 @@ function App() {
       .then(prompt => {
         console.log(prompt)
 
-        const params = { ...DEFAULT_PARAMS, prompt: prompt };
+        const messages = [
+          {
+            "role": "system",
+            "content": [
+              {
+                "type": "text",
+                "text": "You are an AI assistant that helps people create graph."
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": prompt
+              }
+            ]
+          },
+        ]
+        const params = { ...DEFAULT_PARAMS, messages: messages };
 
         const requestOptions = {
           method: 'POST',
@@ -200,19 +239,19 @@ function App() {
           })
           .then((response) => {
             const { choices } = response;
-            const text = choices[0].text;
+            const text = choices[0].message.content;
             console.log(text);
 
             const new_graph = JSON.parse(text);
 
             setGraphState(new_graph);
-
-            document.getElementsByClassName("searchBar")[0].value = "";
-            document.body.style.cursor = 'default';
-            document.getElementsByClassName("generateButton")[0].disabled = false;
           }).catch((error) => {
             console.log(error);
             alert(error);
+          }).finally(() => {
+            document.getElementsByClassName("searchBar")[0].value = "";
+            document.body.style.cursor = 'default';
+            document.getElementsByClassName("generateButton")[0].disabled = false;
           });
       })
   };
