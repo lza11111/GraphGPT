@@ -3,7 +3,7 @@ import Graph from "react-graph-vis";
 import React, { useState } from "react";
 
 const DEFAULT_PARAMS = {
-  "model": "text-davinci-003",
+  "model": "gpt-3.5-turbo",
   "temperature": 0.3,
   "max_tokens": 800,
   "top_p": 1,
