@@ -3,9 +3,8 @@ import Graph from "react-graph-vis";
 import React, { useState } from "react";
 
 const DEFAULT_PARAMS = {
-  "model": "gpt-3.5-turbo",
   "temperature": 0.3,
-  "max_tokens": 800,
+  "max_tokens": 4096
   "top_p": 1,
   "frequency_penalty": 0,
   "presence_penalty": 0
@@ -129,11 +128,11 @@ function App() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + String(apiKey)
+            'api-key': String(apiKey)
           },
           body: JSON.stringify(params)
         };
-        fetch('https://api.openai.com/v1/completions', requestOptions)
+        fetch('https://openai-for-us.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-02-15-preview', requestOptions)
           .then(response => {
             if (!response.ok) {
               switch (response.status) {
@@ -181,11 +180,11 @@ function App() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + String(apiKey)
+            'api-key': String(apiKey)
           },
           body: JSON.stringify(params)
         };
-        fetch('https://api.openai.com/v1/completions', requestOptions)
+        fetch('https://openai-for-us.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-02-15-preview', requestOptions)
           .then(response => {
             if (!response.ok) {
               switch (response.status) {
